@@ -25,7 +25,7 @@ export const sourceNodes: GatsbyNode[`sourceNodes`] = async (gatsbyApi) => {
             rf = rf['RoadFeature'];
 
             if (rf['properties'] == undefined || rf['properties']['GenericRoadFeatureProperty'] == undefined) {
-                console.warn('No properties found for rf: ' + rf['id']['RoadFeatureId']['id']['_text']);
+                // console.warn('No properties found for rf: ' + rf['id']['RoadFeatureId']['id']['_text']);
                 continue;
             }
 
