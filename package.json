@@ -24,6 +24,7 @@
     "gatsby-plugin"
   ],
   "dependencies": {
+    "gatsby-cli": "^5.12.1",
     "node-fetch": "^2.6.1",
     "utm-latlng": "^1.0.7",
     "xml-js": "^1.6.11"

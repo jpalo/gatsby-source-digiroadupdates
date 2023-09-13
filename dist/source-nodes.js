@@ -27,7 +27,7 @@ const sourceNodes = (gatsbyApi) => __awaiter(void 0, void 0, void 0, function* (
             // console.log(JSON.stringify(rf));
             rf = rf['RoadFeature'];
             if (rf['properties'] == undefined || rf['properties']['GenericRoadFeatureProperty'] == undefined) {
-                console.warn('No properties found for rf: ' + rf['id']['RoadFeatureId']['id']['_text']);
+                // console.warn('No properties found for rf: ' + rf['id']['RoadFeatureId']['id']['_text']);
                 continue;
             }
             let rfType = rf['properties']['GenericRoadFeatureProperty']['type']['_attributes']['xlink:title'];
@@ -67,7 +67,7 @@ const sourceNodes = (gatsbyApi) => __awaiter(void 0, void 0, void 0, function* (
                 });
             }
         }
-        // break;
+        break;
     }
 });
 exports.sourceNodes = sourceNodes;
