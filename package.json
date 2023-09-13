@@ -1,0 +1,54 @@
+{
+  "name": "gatsby-source-digiroadupdates",
+  "description": "Provides Finnish Transport Infrastructure Agency's Digiroad data updates (https://vayla.fi/en/transport-network/data/digiroad/data).",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": "Jussi Palo <jussi@jussipalo.com>",
+  "main": "./dist/gatsby-node.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "./dist/*",
+    "gatsby-node.js"
+  ],
+  "scripts": {
+    "clean": "del-cli dist",
+    "build": "tsc",
+    "develop": "tsc --watch",
+    "test": "jest",
+    "prepare": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin"
+  ],
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "utm-latlng": "^1.0.7",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "del-cli": "^5.0.0",
+    "gatsby": "next",
+    "typescript": "^4.9.4"
+  },
+  "peerDependencies": {
+    "gatsby": "^5.0.0"
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": [
+      "es2016",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "declaration": true
+  }
+}
