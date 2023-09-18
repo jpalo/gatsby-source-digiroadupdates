@@ -1,10 +1,37 @@
 {
-  "extends": "../tsconfig.json",
-  "include": ["./src/**/*"],
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public",
+    ".cache",
+    "__tests__"
+  ],
   "compilerOptions": {
+    "target": "ES6",
+    "moduleResolution": "node",
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": false,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": false,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "lib": [
+      "es2016",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "module": "CommonJS",
     "outDir": "./dist",
     "declaration": true,
     "noUnusedLocals": false
-  }  
+  }
 }

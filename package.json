@@ -23,7 +23,7 @@
     "gatsby",
     "gatsby-plugin"
   ],
-  "dependencies": {
+  "dependencies": {    
     "node-fetch": "^2.6.1",
     "utm-latlng": "^1.0.7",
     "xml-js": "^1.6.11"
@@ -34,7 +34,7 @@
     "typescript": "^4.9.4"
   },
   "peerDependencies": {
-    "gatsby": "^5.0.0"
+    "gatsby": "^5.12.0"
   },
   "include": [
     "./src/**/*"
