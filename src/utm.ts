@@ -15,11 +15,9 @@ function koordGT(lev_aste, pit_aste) {
 	let E_nolla = 500000;						// Itäkoordinaatti
 
   // Kaavat
-  // Muunnetaan astemuotoisesta radiaaneiksi
-  let fii;
-  fii = deg2rad(lev_aste);
-  let lambda;
-  lambda = deg2rad(pit_aste);
+  // Muunnetaan astemuotoisesta radiaaneiksi  
+  let fii = deg2rad(lev_aste);  
+  let lambda = deg2rad(pit_aste);
   
   let n = f / (2 - f);
   
@@ -76,12 +74,9 @@ function koordGT(lev_aste, pit_aste) {
   
   let E = A1 * eeta * k_nolla + E_nolla;
   
-  let array = {
-    "N": N,
-    "E": E
-  };
-  return array;
+  return { "N": N, "E": E };
 }
+
 // koordTG
 //
 // Muuntaa ETRS-TM35FIN -muotoiset tasokoordinaatit desimaalimuotoisiksi leveys- ja pituusasteiksi

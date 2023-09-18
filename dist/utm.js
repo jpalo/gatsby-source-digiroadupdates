@@ -15,11 +15,9 @@ function koordGT(lev_aste, pit_aste) {
     let k_nolla = 0.9996; // Mittakaavakerroin
     let E_nolla = 500000; // Itäkoordinaatti
     // Kaavat
-    // Muunnetaan astemuotoisesta radiaaneiksi
-    let fii;
-    fii = deg2rad(lev_aste);
-    let lambda;
-    lambda = deg2rad(pit_aste);
+    // Muunnetaan astemuotoisesta radiaaneiksi  
+    let fii = deg2rad(lev_aste);
+    let lambda = deg2rad(pit_aste);
     let n = f / (2 - f);
     let A1 = a / (1 + n) * (1 + Math.pow(n, 2) / 4 + Math.pow(n, 4) / 64);
     let e_toiseen = 2 * f - Math.pow(f, 2);
@@ -48,11 +46,7 @@ function koordGT(lev_aste, pit_aste) {
     // Tulos tasokoordinaatteina
     let N = A1 * zeeta * k_nolla;
     let E = A1 * eeta * k_nolla + E_nolla;
-    let array = {
-        "N": N,
-        "E": E
-    };
-    return array;
+    return { "N": N, "E": E };
 }
 exports.koordGT = koordGT;
 // koordTG
