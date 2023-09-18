@@ -43,12 +43,10 @@ const sourceNodes = (gatsbyApi) => __awaiter(void 0, void 0, void 0, function* (
                     }
                     else {
                         lat = parseFloat(locationTempArray[i]);
-                        if (lat == 60.40718439269159)
-                            console.log(lat + ', ' + lng);
+                        // if(lat == 60.40718439269159) console.log(lat + ', ' + lng)
                         // convert to lat/long                        
                         let l = (0, utm_1.koordGT)(lat, lng);
-                        if (lat == 60.40718439269159)
-                            console.log(JSON.stringify(l));
+                        // if(lat == 60.40718439269159) console.log(JSON.stringify(l))
                         locationArray_deg.push(lat + '/' + lng);
                         locationArray_utm.push(l['E'] + '/' + l['N']);
                     }

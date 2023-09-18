@@ -45,11 +45,11 @@ export const sourceNodes: GatsbyNode[`sourceNodes`] = async (gatsbyApi) => {
                     } else {                        
                         lat = parseFloat(locationTempArray[i]);
 
-                        if(lat == 60.40718439269159) console.log(lat + ', ' + lng)
+                        // if(lat == 60.40718439269159) console.log(lat + ', ' + lng)
                         // convert to lat/long                        
                         let l = koordGT(lat, lng);
 
-                        if(lat == 60.40718439269159) console.log(JSON.stringify(l))
+                        // if(lat == 60.40718439269159) console.log(JSON.stringify(l))
 
                         locationArray_deg.push(lat + '/' + lng);
                         locationArray_utm.push(l['E'] + '/' + l['N']);
