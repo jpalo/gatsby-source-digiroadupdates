@@ -4,6 +4,7 @@
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "./dist",
-    "declaration": true
-  }
+    "declaration": true,
+    "noUnusedLocals": false
+  }  
 }

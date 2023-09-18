@@ -1,192 +1,161 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toUtm = exports.fromUtm = void 0;
-function toDegrees(radians) {
-    return radians / Math.PI * 180;
-}
-function toRadians(degrees) {
-    return degrees * Math.PI / 180;
-}
-function precisionRound(number, precision) {
-    const factor = Math.pow(10, precision);
-    return Math.round(number * factor) / factor;
-}
-function getUtmLetterDesignator(latitude) {
-    latitude = parseFloat(latitude);
-    if ((84 >= latitude) && (latitude >= 72))
-        return 'X';
-    else if ((72 > latitude) && (latitude >= 64))
-        return 'W';
-    else if ((64 > latitude) && (latitude >= 56))
-        return 'V';
-    else if ((56 > latitude) && (latitude >= 48))
-        return 'U';
-    else if ((48 > latitude) && (latitude >= 40))
-        return 'T';
-    else if ((40 > latitude) && (latitude >= 32))
-        return 'S';
-    else if ((32 > latitude) && (latitude >= 24))
-        return 'R';
-    else if ((24 > latitude) && (latitude >= 16))
-        return 'Q';
-    else if ((16 > latitude) && (latitude >= 8))
-        return 'P';
-    else if ((8 > latitude) && (latitude >= 0))
-        return 'N';
-    else if ((0 > latitude) && (latitude >= -8))
-        return 'M';
-    else if ((-8 > latitude) && (latitude >= -16))
-        return 'L';
-    else if ((-16 > latitude) && (latitude >= -24))
-        return 'K';
-    else if ((-24 > latitude) && (latitude >= -32))
-        return 'J';
-    else if ((-32 > latitude) && (latitude >= -40))
-        return 'H';
-    else if ((-40 > latitude) && (latitude >= -48))
-        return 'G';
-    else if ((-48 > latitude) && (latitude >= -56))
-        return 'F';
-    else if ((-56 > latitude) && (latitude >= -64))
-        return 'E';
-    else if ((-64 > latitude) && (latitude >= -72))
-        return 'D';
-    else if ((-72 > latitude) && (latitude >= -80))
-        return 'C';
-    else
-        return 'Z';
-}
-function getEllipsoid(name = 'WGS 84') {
-    const ellipsoids = {
-        'Airy': { a: 6377563, eccSquared: 0.00667054 },
-        'Australian National': { a: 6378160, eccSquared: 0.006694542 },
-        'Bessel 1841': { a: 6377397, eccSquared: 0.006674372 },
-        'Bessel 1841 Nambia': { a: 6377484, eccSquared: 0.006674372 },
-        'Clarke 1866': { a: 6378206, eccSquared: 0.006768658 },
-        'Clarke 1880': { a: 6378249, eccSquared: 0.006803511 },
-        'Everest': { a: 6377276, eccSquared: 0.006637847 },
-        'Fischer 1960 Mercury': { a: 6378166, eccSquared: 0.006693422 },
-        'Fischer 1968': { a: 6378150, eccSquared: 0.006693422 },
-        'GRS 1967': { a: 6378160, eccSquared: 0.006694605 },
-        'GRS 1980': { a: 6378137, eccSquared: 0.00669438 },
-        'Helmert 1906': { a: 6378200, eccSquared: 0.006693422 },
-        'Hough': { a: 6378270, eccSquared: 0.00672267 },
-        'International': { a: 6378388, eccSquared: 0.00672267 },
-        'Krassovsky': { a: 6378245, eccSquared: 0.006693422 },
-        'Modified Airy': { a: 6377340, eccSquared: 0.00667054 },
-        'Modified Everest': { a: 6377304, eccSquared: 0.006637847 },
-        'Modified Fischer 1960': { a: 6378155, eccSquared: 0.006693422 },
-        'South American 1969': { a: 6378160, eccSquared: 0.006694542 },
-        'WGS 60': { a: 6378165, eccSquared: 0.006693422 },
-        'WGS 66': { a: 6378145, eccSquared: 0.006694542 },
-        'WGS 72': { a: 6378135, eccSquared: 0.006694318 },
-        'ED50': { a: 6378388, eccSquared: 0.00672267 },
-        'WGS 84': { a: 6378137, eccSquared: 0.00669438 },
-        // Max deviation from WGS 84 is 40 cm/km see http://ocq.dk/euref89 (in danish)
-        'EUREF89': { a: 6378137, eccSquared: 0.00669438 },
-        // Same as EUREF89
-        'ETRS89': { a: 6378137, eccSquared: 0.00669438 },
+exports.koordTG = exports.koordGT = void 0;
+const rad2deg = (rad) => {
+    return rad * (180.0 / Math.PI);
+};
+const deg2rad = (deg) => {
+    return deg * (Math.PI / 180.0);
+};
+function koordGT(lev_aste, pit_aste) {
+    // Vakiot
+    let f = 1 / 298.257222101; // Ellipsoidin litistyssuhde
+    let a = 6378137; // Isoakselin puolikas
+    let lambda_nolla = 0.471238898; // Keskimeridiaani (rad), 27 astetta
+    let k_nolla = 0.9996; // Mittakaavakerroin
+    let E_nolla = 500000; // Itäkoordinaatti
+    // Kaavat
+    // Muunnetaan astemuotoisesta radiaaneiksi
+    let fii;
+    fii = deg2rad(lev_aste);
+    let lambda;
+    lambda = deg2rad(pit_aste);
+    let n = f / (2 - f);
+    let A1 = a / (1 + n) * (1 + Math.pow(n, 2) / 4 + Math.pow(n, 4) / 64);
+    let e_toiseen = 2 * f - Math.pow(f, 2);
+    let e_pilkku_toiseen = e_toiseen / (1 - e_toiseen);
+    let h1_pilkku = 1 / 2 * n - 2 / 3 * Math.pow(n, 2) + 5 / 16 * Math.pow(n, 3) + 41 / 180 * Math.pow(n, 4);
+    let h2_pilkku = 13 / 48 * Math.pow(n, 2) - 3 / 5 * Math.pow(n, 3) + 557 / 1440 * Math.pow(n, 4);
+    let h3_pilkku = 61 / 240 * Math.pow(n, 3) - 103 / 140 * Math.pow(n, 4);
+    let h4_pilkku = 49561 / 161280 * Math.pow(n, 4);
+    let Q_pilkku = Math.asinh(Math.tan(fii));
+    let Q_2pilkku = Math.atanh(Math.sqrt(e_toiseen) * Math.sin(fii));
+    let Q = Q_pilkku - Math.sqrt(e_toiseen) * Q_2pilkku;
+    let l = lambda - lambda_nolla;
+    let beeta = Math.atan(Math.sinh(Q));
+    let eeta_pilkku = Math.atanh(Math.cos(beeta) * Math.sin(l));
+    let zeeta_pilkku = Math.asin(Math.sin(beeta) / (1 / Math.cosh(eeta_pilkku)));
+    let zeeta1 = h1_pilkku * Math.sin(2 * zeeta_pilkku) * Math.cosh(2 * eeta_pilkku);
+    let zeeta2 = h2_pilkku * Math.sin(4 * zeeta_pilkku) * Math.cosh(4 * eeta_pilkku);
+    let zeeta3 = h3_pilkku * Math.sin(6 * zeeta_pilkku) * Math.cosh(6 * eeta_pilkku);
+    let zeeta4 = h4_pilkku * Math.sin(8 * zeeta_pilkku) * Math.cosh(8 * eeta_pilkku);
+    let eeta1 = h1_pilkku * Math.cos(2 * zeeta_pilkku) * Math.sinh(2 * eeta_pilkku);
+    let eeta2 = h2_pilkku * Math.cos(4 * zeeta_pilkku) * Math.sinh(4 * eeta_pilkku);
+    let eeta3 = h3_pilkku * Math.cos(6 * zeeta_pilkku) * Math.sinh(6 * eeta_pilkku);
+    let eeta4 = h4_pilkku * Math.cos(8 * zeeta_pilkku) * Math.sinh(8 * eeta_pilkku);
+    let zeeta = zeeta_pilkku + zeeta1 + zeeta2 + zeeta3 + zeeta4;
+    let eeta = eeta_pilkku + eeta1 + eeta2 + eeta3 + eeta4;
+    // Tulos tasokoordinaatteina
+    let N = A1 * zeeta * k_nolla;
+    let E = A1 * eeta * k_nolla + E_nolla;
+    let array = {
+        "N": N,
+        "E": E
     };
-    if (typeof ellipsoids[name] !== 'object') {
-        throw new Error(`${name} is not valid, selection one of ${Object.keys(ellipsoids).join(', ')}`);
-    }
-    return ellipsoids[name];
+    return array;
 }
-function toUtm(latitude, longitude, precision, ellipsoidName) {
-    const { a, eccSquared } = getEllipsoid(ellipsoidName);
-    if (!Number.isInteger(precision)) {
-        throw new Error('Precision is not a integer');
+exports.koordGT = koordGT;
+// koordTG
+//
+// Muuntaa ETRS-TM35FIN -muotoiset tasokoordinaatit desimaalimuotoisiksi leveys- ja pituusasteiksi
+//
+// koordTG(106256.35958, 6715706.37705) --> array(2) { ["lev"]=> float(60.38510687197) ["pit"]=> float(19.848136766751) }
+function koordTG(N, E) {
+    // Vakiot  
+    let f = 1 / 298.257222101;
+    // Ellipsoidin litistyssuhde  
+    let a = 6378137;
+    // Isoakselin puolikas  
+    let lambda_nolla = 0.471238898;
+    // Keskimeridiaani (rad), 27 astetta  
+    let k_nolla = 0.9996;
+    // Mittakaavakerroin
+    let E_nolla = 500000;
+    // Itäkoordinaatti
+    // Kaavat  
+    let n = f / (2 - f);
+    let A1 = a / (1 + n) * (1 + Math.pow(n, 2) / 4 + Math.pow(n, 4) / 64);
+    let e_toiseen = 2 * f - Math.pow(f, 2);
+    let h1 = 1 / 2 * n - 2 / 3 * Math.pow(n, 2) + 37 / 96 * Math.pow(n, 3) - 1 / 360 * Math.pow(n, 4);
+    let h2 = 1 / 48 * Math.pow(n, 2) + 1 / 15 * Math.pow(n, 3) - 437 / 1440 * Math.pow(n, 4);
+    let h3 = 17 / 480 * Math.pow(n, 3) - 37 / 840 * Math.pow(n, 4);
+    let h4 = 4397 / 161280 * Math.pow(n, 4);
+    let zeeta = N / (A1 * k_nolla);
+    let eeta = (E - E_nolla) / (A1 * k_nolla);
+    let zeeta1_pilkku = h1 * Math.sin(2 * zeeta) * Math.cosh(2 * eeta);
+    let zeeta2_pilkku = h2 * Math.sin(4 * zeeta) * Math.cosh(4 * eeta);
+    let zeeta3_pilkku = h3 * Math.sin(6 * zeeta) * Math.cosh(6 * eeta);
+    let zeeta4_pilkku = h4 * Math.sin(8 * zeeta) * Math.cosh(8 * eeta);
+    let eeta1_pilkku = h1 * Math.cos(2 * zeeta) * Math.sinh(2 * eeta);
+    let eeta2_pilkku = h2 * Math.cos(4 * zeeta) * Math.sinh(4 * eeta);
+    let eeta3_pilkku = h3 * Math.cos(6 * zeeta) * Math.sinh(6 * eeta);
+    let eeta4_pilkku = h4 * Math.cos(8 * zeeta) * Math.sinh(8 * eeta);
+    let zeeta_pilkku = zeeta - (zeeta1_pilkku + zeeta2_pilkku + zeeta3_pilkku + zeeta4_pilkku);
+    let eeta_pilkku = eeta - (eeta1_pilkku + eeta2_pilkku + eeta3_pilkku + eeta4_pilkku);
+    let beeta = Math.asin(1 / Math.cosh(eeta_pilkku) * Math.sin(zeeta_pilkku));
+    let l = Math.asin(Math.tanh(eeta_pilkku) / Math.cos(beeta));
+    let Q = Math.asinh(Math.tan(beeta));
+    let Q_pilkku = Q + Math.sqrt(e_toiseen) * Math.atanh(Math.sqrt(e_toiseen) * Math.tanh(Q));
+    for (let kierros = 1; kierros < 5; kierros++) {
+        Q_pilkku = Q + Math.sqrt(e_toiseen) * Math.atanh(Math.sqrt(e_toiseen) * Math.tanh(Q_pilkku));
     }
-    latitude = parseFloat(latitude);
-    longitude = parseFloat(longitude);
-    const latitudeRadians = toRadians(latitude);
-    const longitudeRadians = toRadians(longitude);
-    let zoneNumber;
-    if (longitude >= 8 && longitude <= 13 && latitude > 54.5 && latitude < 58) {
-        zoneNumber = 32;
-    }
-    else if (latitude >= 56.0 && latitude < 64.0 && longitude >= 3.0 && longitude < 12.0) {
-        zoneNumber = 32;
-    }
-    else {
-        zoneNumber = ((longitude + 180) / 6) + 1;
-        if (latitude >= 72.0 && latitude < 84.0) {
-            if (longitude >= 0.0 && longitude < 9.0) {
-                zoneNumber = 31;
-            }
-            else if (longitude >= 9.0 && longitude < 21.0) {
-                zoneNumber = 33;
-            }
-            else if (longitude >= 21.0 && longitude < 33.0) {
-                zoneNumber = 35;
-            }
-            else if (longitude >= 33.0 && longitude < 42.0) {
-                zoneNumber = 37;
-            }
-        }
-    }
-    zoneNumber = parseInt(zoneNumber);
-    const longitudeOrigin = (zoneNumber - 1) * 6 - 180 + 3; //+3 puts origin in middle of zone
-    const longitudeOriginRadians = toRadians(longitudeOrigin);
-    const zoneLetter = getUtmLetterDesignator(latitude);
-    const eccPrimeSquared = (eccSquared) / (1 - eccSquared);
-    const N = a / Math.sqrt(1 - eccSquared * Math.sin(latitudeRadians) * Math.sin(latitudeRadians));
-    const T = Math.tan(latitudeRadians) * Math.tan(latitudeRadians);
-    const C = eccPrimeSquared * Math.cos(latitudeRadians) * Math.cos(latitudeRadians);
-    const A = Math.cos(latitudeRadians) * (longitudeRadians - longitudeOriginRadians);
-    const M = a * ((1 - eccSquared / 4 - 3 * eccSquared * eccSquared / 64 - 5 * eccSquared * eccSquared * eccSquared / 256) * latitudeRadians
-        - (3 * eccSquared / 8 + 3 * eccSquared * eccSquared / 32 + 45 * eccSquared * eccSquared * eccSquared / 1024) * Math.sin(2 * latitudeRadians)
-        + (15 * eccSquared * eccSquared / 256 + 45 * eccSquared * eccSquared * eccSquared / 1024) * Math.sin(4 * latitudeRadians)
-        - (35 * eccSquared * eccSquared * eccSquared / 3072) * Math.sin(6 * latitudeRadians));
-    let easting = 0.9996 * N * (A + (1 - T + C) * A * A * A / 6
-        + (5 - 18 * T + T * T + 72 * C - 58 * eccPrimeSquared) * A * A * A * A * A / 120)
-        + 500000.0;
-    let northing = 0.9996 * (M + N * Math.tan(latitudeRadians) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A * A * A * A / 24
-        + (61 - 58 * T + T * T + 600 * C - 330 * eccPrimeSquared) * A * A * A * A * A * A / 720));
-    if (latitude < 0) {
-        northing += 10000000.0;
-    }
-    northing = precisionRound(northing, precision);
-    easting = precisionRound(easting, precision);
-    return { easting, northing, zoneNumber, zoneLetter };
+    // Tulos radiaaneina
+    let fii = Math.atan(Math.sinh(Q_pilkku));
+    let lambda = lambda_nolla + l;
+    // Tulos asteina
+    fii = rad2deg(fii);
+    lambda = rad2deg(lambda);
+    let array = {
+        "lev": fii,
+        "pit": lambda
+    };
+    return array;
 }
-exports.toUtm = toUtm;
-function fromUtm(easting, northing, zoneNumber, zoneLetter, ellipsoidName) {
-    const { a, eccSquared } = getEllipsoid(ellipsoidName);
-    if (typeof easting !== 'number') {
-        throw new Error('Could not find a valid easting number');
-    }
-    if (typeof northing !== 'number') {
-        throw new Error('Could not find a valid northing number');
-    }
-    if (typeof zoneNumber !== 'number') {
-        throw new Error('Could not find a valid zone number');
-    }
-    if (typeof zoneLetter !== 'string') {
-        throw new Error('Could not find a zone letter');
-    }
-    const e1 = (1 - Math.sqrt(1 - eccSquared)) / (1 + Math.sqrt(1 - eccSquared));
-    const northernHemisphere = (['N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'].indexOf(zoneLetter) !== -1) ? 1 : 0;
-    const y = northernHemisphere === 0 ? northing - 10000000.0 : northing;
-    const x = easting - 500000.0; //remove 500,000 meter offset for longitude
-    const longitudeOrigin = (zoneNumber - 1) * 6 - 180 + 3;
-    const eccPrimeSquared = (eccSquared) / (1 - eccSquared);
-    const M = y / 0.9996;
-    const mu = M / (a * (1 - eccSquared / 4 - 3 * eccSquared * eccSquared / 64 - 5 * eccSquared * eccSquared * eccSquared / 256));
-    const phi1Rad = mu + (3 * e1 / 2 - 27 * e1 * e1 * e1 / 32) * Math.sin(2 * mu)
-        + (21 * e1 * e1 / 16 - 55 * e1 * e1 * e1 * e1 / 32) * Math.sin(4 * mu)
-        + (151 * e1 * e1 * e1 / 96) * Math.sin(6 * mu);
-    const N1 = a / Math.sqrt(1 - eccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad));
-    const T1 = Math.tan(phi1Rad) * Math.tan(phi1Rad);
-    const C1 = eccPrimeSquared * Math.cos(phi1Rad) * Math.cos(phi1Rad);
-    const R1 = a * (1 - eccSquared) / Math.pow(1 - eccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad), 1.5);
-    const D = x / (N1 * 0.9996);
-    let latitude = phi1Rad - (N1 * Math.tan(phi1Rad) / R1) * (D * D / 2 - (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * eccPrimeSquared) * D * D * D * D / 24
-        + (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * eccPrimeSquared - 3 * C1 * C1) * D * D * D * D * D * D / 720);
-    latitude = toDegrees(latitude);
-    let longitude = (D - (1 + 2 * T1 + C1) * D * D * D / 6 + (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * eccPrimeSquared + 24 * T1 * T1)
-        * D * D * D * D * D / 120) / Math.cos(phi1Rad);
-    longitude = longitudeOrigin + toDegrees(longitude);
-    return { latitude, longitude };
+exports.koordTG = koordTG;
+// koord_testi
+//
+// Testataan funktioiden toimivuus ja tarkkuus
+//
+function koord_testi() {
+    //
+    // Geodeettisista tasokoordinaateiksi
+    //
+    // Piste G4 (Geta)
+    let fii = 60 + 23 / 60 + 6.38474 / 3600;
+    // 60 astetta, 23 minuuttia, 06,38474 sekuntia
+    let lambda = 19 + 50 / 60 + 53.29237 / 3600;
+    // 19 astetta, 50 minuuttia, 53.29237 sekuntia
+    // Koordinaatit radiaaneina
+    let fii_r = deg2rad(fii);
+    let lambda_r = deg2rad(lambda);
+    // Muunnos
+    let t_koord = koordGT(fii, lambda);
+    // Ero esimerkin laskettuihin arvoihin
+    let N_ero = (t_koord["N"] - 6715706.37708) * 1000;
+    let E_ero = (t_koord["E"] - 106256.35961) * 1000;
+    //
+    // Tasokoordinaateiksi geodeettisiksi koordinaateiksi
+    //
+    // Pisteen tasokoordinaatit
+    let N = 6715706.37705;
+    let E = 106256.35958;
+    // Muunnos
+    let g_koord = koordTG(N, E);
+    // Muunnoksen tulos
+    let lev = g_koord["lev"];
+    let pit = g_koord["pit"];
+    // Tulos radiaaneina
+    let lev_r = deg2rad(lev);
+    let pit_r = deg2rad(pit);
+    // Ero radiaaneina
+    let lev_ero_r = lev_r - 1.0539189340845;
+    let pit_ero_r = pit_r - 0.34641533700441;
+    // Ero asteina  
+    let lev_ero_d = lev - rad2deg(1.0539189340845);
+    let pit_ero_d = pit - rad2deg(0.34641533700441);
+    // Eroarvio millimetreinä
+    // http://www.maanmittauslaitos.fi/kartat/koordinaatit/3d-koordinaatistot/suorakulmaiset-maantieteelliset-koordinaatistot
+    // Leveysaste ~ 111.5 km, pituusaste Keski-Suomessa ~ 14 km  
+    let lev_ero_m = lev_ero_d * 111.5 * 1000 * 1000;
+    let pit_ero_m = pit_ero_d * 14 * 1000 * 1000;
 }
-exports.fromUtm = fromUtm;

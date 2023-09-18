@@ -1,11 +1,9 @@
-declare function toUtm(latitude: any, longitude: any, precision: any, ellipsoidName: any): {
-    easting: number;
-    northing: number;
-    zoneNumber: any;
-    zoneLetter: string;
+declare function koordGT(lev_aste: any, pit_aste: any): {
+    N: number;
+    E: number;
 };
-declare function fromUtm(easting: any, northing: any, zoneNumber: any, zoneLetter: any, ellipsoidName: any): {
-    latitude: number;
-    longitude: number;
+declare function koordTG(N: any, E: any): {
+    lev: number;
+    pit: number;
 };
-export { fromUtm, toUtm };
+export { koordGT, koordTG };

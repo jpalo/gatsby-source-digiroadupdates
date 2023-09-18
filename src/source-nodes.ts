@@ -2,7 +2,7 @@ import type { GatsbyNode, SourceNodesArgs, NodeInput } from "gatsby"
 import { fetchXML } from "./utils";
 import type { NodeBuilderInput } from "./types"
 import { NODE_TYPES } from "./constants"
-import { toUtm } from './utm'
+import { koordGT } from './utm'
 
 export const sourceNodes: GatsbyNode[`sourceNodes`] = async (gatsbyApi) => {
     var query = "https://avoinapi.vaylapilvi.fi/tnits/public/download/queryDataSets";
@@ -45,13 +45,14 @@ export const sourceNodes: GatsbyNode[`sourceNodes`] = async (gatsbyApi) => {
                     } else {                        
                         lat = parseFloat(locationTempArray[i]);
 
-                        // console.log(lat + ', ' + lng)
+                        if(lat == 60.40718439269159) console.log(lat + ', ' + lng)
                         // convert to lat/long                        
-                        let l = toUtm(lat, lng, 0, 'WGS 84');
-                        // console.log(JSON.stringify(l))
+                        let l = koordGT(lat, lng);
+
+                        if(lat == 60.40718439269159) console.log(JSON.stringify(l))
 
                         locationArray_deg.push(lat + '/' + lng);
-                        locationArray_utm.push(l['easting'] + '/' + l['northing']);
+                        locationArray_utm.push(l['E'] + '/' + l['N']);
                     }
                 }
 
