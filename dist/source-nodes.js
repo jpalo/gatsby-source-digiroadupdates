@@ -67,7 +67,7 @@ const sourceNodes = (gatsbyApi) => __awaiter(void 0, void 0, void 0, function* (
                 });
             }
         }
-        break;
+        // break;
     }
 });
 exports.sourceNodes = sourceNodes;
