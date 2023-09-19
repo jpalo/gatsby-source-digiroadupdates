@@ -5,7 +5,7 @@ export type NodeBuilderInput =
   | { type: typeof NODE_TYPES.RoadFeature; data: IRoadFeatureInput }  
 
 export interface IRoadFeatureInput {
-  id: string
+  id: number
   validFrom: Date
   updateType: string
   // roadFeatureType: string

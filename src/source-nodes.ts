@@ -73,7 +73,7 @@ export const sourceNodes: GatsbyNode[`sourceNodes`] = async (gatsbyApi) => {
             }
         }
 
-        // break;
+        break;
     }
 }
 
@@ -93,7 +93,7 @@ export function nodeBuilder({ gatsbyApi, input }: INodeBuilderArgs) {
         children: [],
         internal: {
             type: input.type,
-            contentDigest: input.data.id,
+            contentDigest: input.data.id.toString(),
         },
     } satisfies NodeInput
 

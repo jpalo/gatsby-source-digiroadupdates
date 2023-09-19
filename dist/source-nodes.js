@@ -67,7 +67,7 @@ const sourceNodes = (gatsbyApi) => __awaiter(void 0, void 0, void 0, function* (
                 });
             }
         }
-        // break;
+        break;
     }
 });
 exports.sourceNodes = sourceNodes;
@@ -75,7 +75,7 @@ function nodeBuilder({ gatsbyApi, input }) {
     const id = gatsbyApi.createNodeId(`${input.type}-${input.data.id}`);
     const node = Object.assign(Object.assign({}, input.data), { id, _id: input.data.id, parent: null, children: [], internal: {
             type: input.type,
-            contentDigest: input.data.id,
+            contentDigest: input.data.id.toString(),
         } });
     // console.log('creating node: ' + JSON.stringify(node))
     gatsbyApi.actions.createNode(node);

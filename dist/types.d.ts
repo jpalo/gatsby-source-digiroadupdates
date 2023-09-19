@@ -5,7 +5,7 @@ export type NodeBuilderInput = {
     data: IRoadFeatureInput;
 };
 export interface IRoadFeatureInput {
-    id: string;
+    id: number;
     validFrom: Date;
     updateType: string;
     value: number;
