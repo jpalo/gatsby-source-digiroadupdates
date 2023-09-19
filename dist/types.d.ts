@@ -6,9 +6,8 @@ export type NodeBuilderInput = {
 };
 export interface IRoadFeatureInput {
     id: string;
-    validFrom: string;
+    validFrom: Date;
     updateType: string;
-    roadFeatureType: string;
     value: number;
     location_utm: string[];
     location_deg: string[];

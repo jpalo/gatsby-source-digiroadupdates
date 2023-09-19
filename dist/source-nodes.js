@@ -56,9 +56,9 @@ const sourceNodes = (gatsbyApi) => __awaiter(void 0, void 0, void 0, function* (
                         type: constants_1.NODE_TYPES.RoadFeature,
                         data: {
                             id: rf['id']['RoadFeatureId']['id']['_text'],
-                            validFrom: rf['validFrom']['_text'],
+                            validFrom: new Date(rf['validFrom']['_text']),
                             updateType: rf['updateInfo']['UpdateInfo']['type']['_text'],
-                            roadFeatureType: rfType,
+                            // roadFeatureType: rfType,
                             value: rf['properties']['GenericRoadFeatureProperty']['value']['_text'],
                             location_utm: locationArray_utm,
                             location_deg: locationArray_deg
